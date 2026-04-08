@@ -40,8 +40,14 @@ start on a different branch without first checking out main, you can use the
 `--no-install` option with the `composer create-project` command, then change
 the branch of the Drupal core clone, then do `composer install`.
 
-Once the Composer installation is complete, you can install Drupal as normal,
-either with `drush si` or with the web UI.
+Once the Composer installation is complete, you can require further tools such
+as Drush:
+
+```
+$ composer require drush/drush
+```
+
+You can install Drupal as normal, either with `drush si` or with the web UI.
 
 ### Installation on DDEV
 
@@ -52,6 +58,7 @@ for your project and `cd` into it. Then:
 $ ddev config --project-type=drupal12 --docroot=web
 $ ddev start
 $ ddev composer create-project joachim-n/drupal-core-development-project
+$ ddev composer require drush/drush
 ```
 In case you are on a case-insensitive file system, like APFS on macOS, run:
 
