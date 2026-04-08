@@ -49,6 +49,18 @@ $ composer require drush/drush
 
 You can install Drupal as normal, either with `drush si` or with the web UI.
 
+The following modules may be useful, although currently Drupal core requires a
+patch to enable contrib modules when it is on the `main` branch (see
+https://www.drupal.org/project/drupal/issues/3387322). (This project template
+has a Composer script which will install the packages regardless of their core
+compatibility.)
+
+```
+$ composer require drupal/devel
+$ composer require drupal/admin_toolbar
+$ composer require drupal/devel_a11y
+```
+
 ### Installation on DDEV
 
 First, make sure your DDEV version is at least 1.25.0. Next, create a new folder
