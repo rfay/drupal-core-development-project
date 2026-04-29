@@ -1,0 +1,23 @@
+diff --git a/core/lib/Drupal/Core/DrupalKernel.php b/core/lib/Drupal/Core/DrupalKernel.php
+--- a/core/lib/Drupal/Core/DrupalKernel.php
++++ b/core/lib/Drupal/Core/DrupalKernel.php
+@@ -345,7 +345,14 @@
+   protected static function guessApplicationRoot() {
+-    // Determine the application root by:
+-    // - Removing the namespace directories from the path.
+-    // - Getting the path to the directory two levels up from the path
+-    //   determined in the previous step.
+-    return dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2);
++    // In a web context, use DOCUMENT_ROOT to determine the application root
++    // without resolving symlinks. This is needed when core/ is a symlinked
++    // directory, as __DIR__ would otherwise resolve to the real filesystem
++    // path rather than the logical web root.
++    if (PHP_SAPI !== 'cli' && !empty($_SERVER['DOCUMENT_ROOT'])) {
++      return rtrim($_SERVER['DOCUMENT_ROOT'], '/\\\\');
++    }
++    // Determine the application root by:
++    // - Removing the namespace directories from the path.
++    // - Getting the path to the directory two levels up from the path
++    //   determined in the previous step.
++    return dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2);
+   }
