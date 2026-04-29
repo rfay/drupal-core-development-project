@@ -1,0 +1,23 @@
+diff --git a/core/includes/install.core.inc b/core/includes/install.core.inc
+--- a/core/includes/install.core.inc
++++ b/core/includes/install.core.inc
+@@ -341,7 +341,10 @@ function install_begin_request($class_loader, &$install_state): void {
+   }
+ 
+   $site_path = empty($install_state['site_path']) ? DrupalKernel::findSitePath($request, FALSE) : $install_state['site_path'];
+-  Settings::initialize(dirname(__DIR__, 2), $site_path, $class_loader);
++  // Use DOCUMENT_ROOT to avoid resolving symlinks when core/ is a symlinked
++  // directory. dirname(__DIR__, 2) resolves via the real filesystem path.
++  $app_root = !empty($_SERVER['DOCUMENT_ROOT']) ? rtrim($_SERVER['DOCUMENT_ROOT'], '/\\') : dirname(__DIR__, 2);
++  Settings::initialize($app_root, $site_path, $class_loader);
+ 
+   // Ensure that procedural dependencies are loaded as early as possible,
+   // since the error/exception handlers depend on them.
+@@ -370,7 +373,7 @@ function install_begin_request($class_loader, &$install_state): void {
+   // Register the database driver extension list provider.
+   $container
+     ->register('extension.list.database_driver', 'Drupal\Core\Extension\DatabaseDriverList')
+-    ->addArgument(dirname(__DIR__, 2))
++    ->addArgument($app_root)
+     ->addArgument('database_driver')
+     ->addArgument(new NullBackend('database_driver'));

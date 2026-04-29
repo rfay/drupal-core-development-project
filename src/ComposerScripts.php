@@ -62,6 +62,7 @@ class ComposerScripts {
     // through web/core because GNU patch 2.7+ refuses to traverse symlinks.
     chdir('../repos/drupal');
     shell_exec('patch --follow-symlinks -p1 <../../scaffold/scaffold-patch-install-php.patch');
+    shell_exec('patch --follow-symlinks -p1 <../../scaffold/scaffold-patch-install-core-inc.patch');
     shell_exec('patch --follow-symlinks -p1 <../../scaffold/scaffold-patch-drupal-kernel-php.patch');
 
     // Symlink the top-level vendor folder into the Drupal core git repo.
