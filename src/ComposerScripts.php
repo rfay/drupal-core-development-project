@@ -56,13 +56,16 @@ class ComposerScripts {
     chdir('web');
     shell_exec('patch -p1 <../scaffold/scaffold-patch-index-php.patch');
     shell_exec('patch -p1 <../scaffold/scaffold-patch-update-php.patch');
+
     // Patch core/install.php and DrupalKernel to fix symlinked core/ root path
-    // detection.
-    shell_exec('patch -p1 <../scaffold/scaffold-patch-install-php.patch');
-    shell_exec('patch -p1 <../scaffold/scaffold-patch-drupal-kernel-php.patch');
+    // detection. These patches must be applied from repos/drupal/ rather than
+    // through web/core because GNU patch 2.7+ refuses to traverse symlinks.
+    chdir('../repos/drupal');
+    shell_exec('patch --follow-symlinks -p1 <../../scaffold/scaffold-patch-install-php.patch');
+    shell_exec('patch --follow-symlinks -p1 <../../scaffold/scaffold-patch-drupal-kernel-php.patch');
 
     // Symlink the top-level vendor folder into the Drupal core git repo.
-    chdir('..');
+    chdir('../..');
     static::makeSymlink('../../vendor', 'repos/drupal/vendor');
 
     // Create folders for running tests.
