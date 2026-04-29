@@ -18,10 +18,10 @@ diff --git a/core/lib/Drupal/Core/DrupalKernel.php b/core/lib/Drupal/Core/Drupal
 +    // - Getting the path to the directory two levels up from the path
 +    //   determined in the previous step.
 +    $guessed = dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2);
-+    // If autoload.php is absent from the guessed root, core/ is likely a
-+    // symlink and the real web root is elsewhere. Search ancestor directories
-+    // for a web root whose core/ symlink resolves to the same real path.
-+    if (!is_file($guessed . '/autoload.php') && is_dir($guessed . '/core')) {
++    // If core/ is a real directory (not a symlink), this path is the git
++    // clone root, not the web root. Search ancestor directories for a
++    // web root whose core/ symlink resolves to the same real path.
++    if (!is_link($guessed . '/core') && is_dir($guessed . '/core')) {
 +      $core_real_path = realpath($guessed . '/core');
 +      $search = dirname($guessed);
 +      while ($search !== dirname($search)) {
@@ -36,3 +36,4 @@ diff --git a/core/lib/Drupal/Core/DrupalKernel.php b/core/lib/Drupal/Core/Drupal
 +    }
 +    return $guessed;
    }
+
